@@ -1,0 +1,19 @@
+{
+  "name": "zerodha",
+  "version": "1.0.0",
+  "description": "",
+  "main": "accessToken.js",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "https": "^1.0.0",
+    "kiteconnect": "^4.0.1",
+    "node-fetch": "^3.3.0",
+    "node-telegram-bot-api": "^0.60.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC"
+}
