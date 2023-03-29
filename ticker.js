@@ -147,7 +147,6 @@ let flag = true
 
 
 async function onTicks(ticks) {
-	sendMsg('ticks');
   if(flag) {
     let lastPriceObj = await getLTP(tradingSymbols);
    
@@ -161,6 +160,8 @@ async function onTicks(ticks) {
 
     let sumLossForEachTrade = lossForEachTrade.reduce((acc,curr) => acc+curr, 0);
     console.log('sumLossForEachTrade', sumLossForEachTrade);
+    sendMsg(`Sum:${sumLossForEachTrade}`);
+    sendMsg(`LOSS_LIMIT: ${LOSS_LIMIT}`);
 
     if(sumLossForEachTrade <= LOSS_LIMIT) {
       squareOffPositions(negativeQuantityPositions);
@@ -176,6 +177,7 @@ const squareOffPositions = (negativeQuantityPositions) => {
     })
   }
   console.log('squaring off ..', negativeQuantityPositions);
+  sendMsg('squaring off positions...');
 }
 
 async function subscribe () {
@@ -184,6 +186,9 @@ async function subscribe () {
     console.log(myPositions);
     instrumentTokens = response.net.map(item => item.quantity < 0 ? item.instrument_token : null);
     tradingSymbols = response.net.map(item => item.quantity < 0 ? `${item.exchange}:${item.tradingsymbol}`: null);
+  }).catch(e => {
+      sendMsg('get positions failed');
+      console.log(e);
   });
 
   console.log('instrumentTokens', instrumentTokens);
@@ -216,5 +221,8 @@ async function onTrade(order) {
     tradingSymbols = response.net.map(item => item.quantity < 0 ? `${item.exchange}:${item.tradingsymbol}`: null);
 
     console.log('updating order by fetching positions');
-  });
+  }).catch(e => {
+    sendMsg('get positions failed');
+    console.log(e);
+});
 }
