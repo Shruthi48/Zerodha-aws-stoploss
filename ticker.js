@@ -2,7 +2,7 @@ require('dotenv').config();
 const https = require('https');
 var KiteTicker = require("kiteconnect").KiteTicker;
 var KiteConnect = require("kiteconnect").KiteConnect;
-const LOSS_LIMIT = -1500;
+const LOSS_LIMIT = process.env.LOSS_LIMIT;
 var kc = new KiteConnect({
     api_key: process.env.API_KEY,
     access_token: process.env.ACCESS_TOKEN
@@ -29,12 +29,12 @@ let tradingSymbols = [];
 
 const breakQuantityAndPlaceOrder = (order) => {
   let quantity = Math.abs(order.quantity);
-  let maxLimit = 900;
+  let maxLimit = process.env.FQ;
 
   while( quantity != 0) {
       if(quantity > maxLimit) {
-          placeOrderWithDelay(order,900,250);
-          quantity = quantity - 900;
+          placeOrderWithDelay(order,maxLimit,250);
+          quantity = quantity - maxLimit;
         } else {
           placeOrderWithDelay(order,quantity,250);
           quantity = 0;
@@ -160,6 +160,7 @@ async function onTicks(ticks) {
 
     let sumLossForEachTrade = lossForEachTrade.reduce((acc,curr) => acc+curr, 0);
     console.log('sumLossForEachTrade', sumLossForEachTrade);
+    console.log('LOSS_LIMIT',LOSS_LIMIT);	  
     sendMsg(`Sum:${sumLossForEachTrade}`);
     sendMsg(`LOSS_LIMIT: ${LOSS_LIMIT}`);
 

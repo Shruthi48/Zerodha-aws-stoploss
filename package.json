@@ -10,7 +10,6 @@
     "node-fetch": "^3.3.0",
     "node-telegram-bot-api": "^0.60.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "mocha"
   },
